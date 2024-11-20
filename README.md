@@ -131,14 +131,125 @@ Une fois les conteneurs démarrés, vous pouvez accéder aux services via les po
 
 ### Service Commande
 
-- **POST /api/orders/order** : Créer une nouvelle commande.
-- **GET /api/orders/order** : Récupérer toutes les commandes.
-- **PATCH /api/orders/order/:id** : Mettre à jour une commande.
-- **DELETE /api/orders/order/:id** : Supprimer une commande.
+#### 1. Créer une commande
+**POST** `/api/orders`
+
+- **Description :** Crée une nouvelle commande après vérification de la disponibilité des éléments de menu via RabbitMQ.
+- **Headers :**
+  - Authorization: Bearer <token>
+- **Body :**
+  ```json
+  {
+    "customerName": "John Doe",
+    "menuId": "64abc123ef56789012345678",
+    "quantity": 2
+  }
+- **Réponses** :
+   - 201 Created : Commande créée avec succès.
+   - 404 Not Found : Élément de menu introuvable.
+   - 400 Bad Request : Élément de menu non disponible.
+   - 500 Internal Server Error : Erreur lors de la création de la commande.
+
+#### 2. Récupérer toutes les commandes
+**GET** `/api/orders`
+
+- **Description :** Crée une nouvelle commande après vérification de la disponibilité des éléments de menu via RabbitMQ.
+- **Headers :**
+  - Authorization: Bearer <token>
+- **Réponses** :
+   - 200 OK : Liste des commandes
+   - 500 Internal Server Error : Erreur lors de la récupération des commandes.
+
+#### 3. Mettre à jour une commande
+**PUT** `/api/orders/:id`
+
+- **Description :** Met à jour une commande existante.
+- **Headers :**
+  - Authorization: Bearer <token>
+- **Params :**
+  - id: ID de l'utilisateur à modifier.
+- **Body :**
+  ```json
+  {
+     "status": "confirmed"
+   }
+- **Réponses** :
+   - 200 OK : Commande mise à jour avec succès
+   - 404 Not Found : Commande introuvable.
+   - 500 Internal Server Error : Erreur lors de la mise à jour.
+
+#### 4. Supprimer une commande
+**DELETE** `/api/orders/:id`
+
+- **Description :** Supprime une commande existante.
+- **Headers :**
+  - Authorization: Bearer <token>
+- **Params :**
+  - id: ID de la commande à supprimer.
+- **Réponses** :
+   - 200 OK : Commande supprimée avec succès
+   - 404 Not Found : Commande introuvable.
+   - 500 Internal Server Error : Erreur lors de la suppression.
 
 ### Service Menu
 
-- **POST /api/menus/menu** : Ajouter un nouvel élément de menu.
-- **GET /api/menus/menu** : Récupérer tous les éléments de menu.
-- **PUT /api/menus/menu/:id** : Mettre à jour un élément de menu.
-- **DELETE /api/menus/menu/:id** : Supprimer un élément de menu.
+#### 1. Ajouter un menu
+**POST** `/api/menus`
+
+- **Description :** Ajoute un nouveau menu au système.
+- **Headers :**
+  - Authorization: Bearer <token>
+- **Body :**
+  ```json
+  {
+    "name": "Pizza Margherita",
+    "description": "Classic pizza with tomato sauce, mozzarella, and basil.",
+    "price": 12.99,
+    "category": "Italian",
+    "isAvailable": true //default
+  }
+- **Réponses** :
+   - 201 Created : Menu ajouté avec succès.
+   - 500 Internal Server Error : Erreur lors de l'ajout du menu.
+
+#### 2. Récupérer tous les menus
+**GET** `/api/menus`
+
+- **Description :** Renvoie la liste de tous les menus disponibles dans le système.
+- **Headers :**
+  - Authorization: Bearer <token>
+- **Réponses** :
+   - 200 OK : Liste des menus.
+   - 500 Internal Server Error : Erreur lors de la récupération des menus
+
+#### 3. Mettre à jour un menu
+**PUT** `/api/menus/:id`
+
+- **Description :** Met à jour un menu existant.
+- **Headers :**
+  - Authorization: Bearer <token>
+- **Params :**
+  - id: ID du menu à modifier.
+- **Body :**
+  ```json
+  {
+     "price": 14.99,
+     "isAvailable": false
+   }
+- **Réponses** :
+   - 200 OK : Menu mis à jour avec succès.
+   - 404 Not Found : Menu introuvable.
+   - 500 Internal Server Error : Erreur lors de la mise à jour
+
+#### 4. Supprimer un menu
+**DELETE** `/api/menus/:id`
+
+- **Description :** Supprime un menu existant et publie un message sur RabbitMQ pour signaler la suppression.
+- **Headers :**
+  - Authorization: Bearer <token>
+- **Params :**
+  - id: ID du menu à supprimer.
+- **Réponses** :
+   - 200 OK : Menu supprimé avec succès
+   - 404 Not Found : Menu introuvable.
+   - 500 Internal Server Error : Erreur lors de la suppression.
