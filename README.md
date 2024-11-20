@@ -22,7 +22,7 @@ Ce projet est une application de microservices pour la gestion d'un restaurant. 
    cd restaurant-microservices
    ```
 
-2. **Configurer les variables d'environnement :**
+2. **Configurer les variables d'environnement (Optionel) :**
 
    Créez un fichier `.env` dans chaque dossier de service (`utilisateur`, `commande`, `menu`) et définissez les variables nécessaires comme `MONGO_URI`, `RABBITMQ_URL`, et `JWT_SECRET`.
 
