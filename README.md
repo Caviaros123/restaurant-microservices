@@ -44,12 +44,90 @@ Une fois les conteneurs démarrés, vous pouvez accéder aux services via les po
 
 ### Service Utilisateur
 
-- **POST /api/users/register** : Inscription d'un nouvel utilisateur.
-- **POST /api/users/login** : Connexion d'un utilisateur.
-- **GET /api/users/profile** : Récupérer le profil de l'utilisateur connecté.
-- **GET /api/users/** : Récupérer tous les utilisateurs.
-- **PUT /api/users/:id** : Modifier un utilisateur.
-- **DELETE /api/users/:id** : Supprimer un utilisateur.
+#### 1. Enregistrement d'un utilisateur
+**POST** `/api/users/register`
+
+- **Description :** Crée un nouvel utilisateur.
+- **Body :**
+  ```json
+  {
+    "email": "user@example.com",
+    "password": "password123",
+    "address": "123 Main Street",
+    "phone": "123456789"
+  }
+- **Réponses** :
+   - 201 Created : Utilisateur créé avec succès.
+   - 400 Bad Request : L'utilisateur existe déjà.
+   - 500 Internal Server Error : Erreur lors de l'enregistrement.
+
+#### 2. Connexion d'un utilisateur
+**POST** `/api/users/login`
+
+- **Description :** Connecte un utilisateur existant et renvoie un token JWT.
+- **Body :**
+  ```json
+  {
+     "email": "user@example.com",
+     "password": "password123"
+   }
+- **Réponses** :
+   - 201 OK : Connexion réussie avec un token JWT.
+   - 400 Bad Request : Identifiants invalides.
+   - 500 Internal Server Error : Erreur lors de la connexion.
+
+#### 3. Profil de l'utilisateur connecté
+**GET** `/api/users/profile`
+
+- **Description :** Récupère les informations du profil de l'utilisateur connecté.
+- **Headers :**
+  - Authorization: Bearer <token>
+- **Réponses** :
+   - 201 OK : Détails de l'utilisateur.
+   - 400 Bad Request : Utilisateur non trouvé.
+   - 500 Internal Server Error : Erreur lors de la récupération du profil.
+
+#### 4. Récupérer tous les utilisateurs (Admin uniquement)
+**GET /api/users/** 
+- **Description :** Récupère la liste de tous les utilisateurs
+- **Headers :**
+  - Authorization: Bearer <token>
+- **Réponses** :
+   - 201 OK : Liste des utilisateurs (sans les mots de passe).
+   - 500 Internal Server Error : Erreur lors de la récupération des utilisateurs.
+
+#### 5. Modifier un utilisateur
+**PUT** `/api/users/:id`
+
+- **Description :** Met à jour les informations d'un utilisateur.
+- **Headers :**
+  - Authorization: Bearer <token>
+- **Params :**
+  - id: ID de l'utilisateur à modifier.
+- **Body :**
+  ```json
+  {
+    "email": "newuser@example.com",
+    "address": "1234 Main Street",
+    "phone": "023456789"
+  }
+- **Réponses** :
+   - 201 OK : Utilisateur modifié avec succès.
+   - 400 Bad Request : Utilisateur non trouvé.
+   - 500 Internal Server Error : Erreur lors de la modification.
+
+#### 6. Supprimer un utilisateur
+**DELETE** `/api/users/:id`
+
+- **Description :** Supprime un utilisateur.
+- **Headers :**
+  - Authorization: Bearer <token>
+- **Params :**
+  - id: ID de l'utilisateur à supprimer.
+- **Réponses** :
+   - 201 OK : Utilisateur supprimé avec succès.
+   - 400 Bad Request : Utilisateur non trouvé.
+   - 500 Internal Server Error : Erreur lors de la suppression.
 
 ### Service Commande
 
